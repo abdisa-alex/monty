@@ -1,31 +1,47 @@
 #include "monty.h"
+global_t header;
+/**
+ * start_stack - declare and initialize header
+ * @stack: Addres of stack
+ */
+void start_stack(stack_t **stack)
+{
+	*stack = NULL;
+	header.first = stack;
+}
+/**
+ * free_all - Free all asign malloc func
+ */
+void free_all(void)
+{
+	stack_t *tmp1, *tmp2 = NULL;
 
-list_t *list_opcode = NULL;
+	tmp1 = *(header.first);
+	while (tmp1 != NULL)
+	{
+		tmp2 = tmp1->next;
+		free(tmp1);
+		tmp1 = tmp2;
+	}
+	free(header.buffer);
+	fclose(header.file);
+}
 
 /**
- * main - Main entry point for Stacks and Queues
- * @argc: Argument count for the matrix
- * @argv: Argument vector for the matrix
- * Return: 0 on success or other number if it fails
+ * main - num of arguments
+ * @argc: number of arguments
+ * @argv: arguments
+ * Return: EXIT_FAILURE on Fail, EXIT_SUCCES on Succes
  */
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-	stack_t *stack = NULL;
-	list_t *temp;
+	stack_t *stack;
 
-	if (argc != 2)
+	start_stack(&stack);
+	if (argc == 2)
 	{
-		fprintf(stderr, "USAGE: monty file\n");
-		exit(EXIT_FAILURE);
+		find_file(argv[1], &stack);
 	}
-
-	get_file(argv[1]);
-
-	temp = list_opcode;
-
-	for (; temp; temp = temp->next)
-		(*ptr_opcode(temp))(&stack, temp->n);
-
-	free_all(list_opcode, stack);
-	return (0);
+	fprintf(stderr, "USAGE: monty file\n");
+	exit(EXIT_FAILURE);
 }
